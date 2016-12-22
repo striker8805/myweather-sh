@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.shenhao.miniweather;
+package cn.edu.pku.ss.shenhao.NetUtil;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
