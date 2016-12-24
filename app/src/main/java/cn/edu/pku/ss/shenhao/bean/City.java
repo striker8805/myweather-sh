@@ -11,7 +11,13 @@ public class City {
     private String allPY;
     private String allFirstPY;
 
-    public City(String province, String city, String number, String firstPY, String allPY, String allFirstPY) {
+    @Override
+    public String toString() {
+        return province + " - " + city + " " + allPY;
+    }
+
+    public City(String province, String city, String number, String
+            firstPY, String allPY, String allFirstPY) {
         this.province = province;
         this.city = city;
         this.number = number;

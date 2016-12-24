@@ -17,59 +17,38 @@ import cn.edu.pku.ss.shenhao.db.CityDB;
 /**
  * Created by striker on 2016/12/22.
  */
-public class MyApplication extends Application{
-    private static final String TAG = "MyAPP";
-    private static MyApplication mApplication;
+public class MyApplication extends Application {
+    private static final String TAG = "MyApp";
+    private static MyApplication myApplication;
     private CityDB mCityDB;
     private List<City> mCityList;
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"MyApplication->Oncreate");
-        mApplication = this;
+        Log.d(TAG, "MyApplication -> onCreate");
+
+        myApplication = this;
         mCityDB = openCityDB();
         initCityList();
     }
-    private void initCityList(){
-        mCityList = new ArrayList<City>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-// TODO Auto-generated method stub
-                prepareCityList();
-            }
-        }).start();
-    }
 
-    private boolean prepareCityList() {
-        mCityList = mCityDB.getAllCity();
-        int i=0;
-        for (City city : mCityList) {
-            i++;
-            String cityName = city.getCity();
-            String cityCode = city.getNumber();
-            Log.d(TAG,cityCode+":"+cityName);
-        }
-        Log.d(TAG,"i="+i);
-        return true;
-    }
-    public List<City> getCityList() {
-        return mCityList;
-    }
-
-    public static MyApplication getInstance(){
-        return mApplication;
-    }
+//    // 单例模式
+//    public static MyApplication getInstance() {
+//        return myApplication;
+//    }
 
     private CityDB openCityDB() {
-        String path = "/data" + Environment.getDataDirectory().getAbsolutePath()
+        String path = "/data"
+                + Environment.getDataDirectory().getAbsolutePath()
                 + File.separator + getPackageName()
                 + File.separator + "databases1"
                 + File.separator
                 + CityDB.CITY_DB_NAME;
         File db = new File(path);
-        Log.d(TAG,path);
+        Log.d(TAG, path);
+
+        // 如果不存在数据库路径和文件则从 Assets 中写入到指定位置
         if (!db.exists()) {
             String pathfolder = "/data"
                     + Environment.getDataDirectory().getAbsolutePath()
@@ -77,15 +56,14 @@ public class MyApplication extends Application{
                     + File.separator + "databases1"
                     + File.separator;
             File dirFirstFolder = new File(pathfolder);
-            if(!dirFirstFolder.exists()){
+            if (!dirFirstFolder.exists()) {
                 dirFirstFolder.mkdirs();
-                Log.i("MyApp","mkdirs");
+                Log.i(TAG, "Make database directory");
             }
-            Log.i("MyApp","db is not exists");
             try {
                 InputStream is = getAssets().open("city.db");
                 FileOutputStream fos = new FileOutputStream(db);
-                int len = -1;
+                int len;
                 byte[] buffer = new byte[1024];
                 while ((len = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, len);
@@ -93,11 +71,35 @@ public class MyApplication extends Application{
                 }
                 fos.close();
                 is.close();
+                Log.i(TAG, "Create db file here");
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(0);
             }
         }
         return new CityDB(this, path);
+    }
+
+    // 如果城市很多那么初始化也需要时间，需要使用多线程
+    private void initCityList() {
+        mCityList = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mCityList = mCityDB.getAllCity();
+//                int i = 0;
+//                for (City city : mCityList) {
+//                    i++;
+//                    String cityName = city.getCity();
+//                    String cityCode = city.getNumber();
+//                    Log.d(TAG, cityCode + " : " + cityName);
+//                }
+//                Log.d(TAG, "i = " + i);
+            }
+        }).start();
+    }
+
+    public List<City> getmCityList() {
+        return mCityList;
     }
 }
