@@ -12,7 +12,7 @@ public class NetUtil {
         NETWORK_WIFI,
         NETWORK_MOBILE
     }
-
+    //获取网络状态
     public static NetworkState getNetworkState(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

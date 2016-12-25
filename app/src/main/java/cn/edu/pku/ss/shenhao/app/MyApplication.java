@@ -33,11 +33,7 @@ public class MyApplication extends Application {
         initCityList();
     }
 
-//    // 单例模式
-//    public static MyApplication getInstance() {
-//        return myApplication;
-//    }
-
+    //获取数据库内容
     private CityDB openCityDB() {
         String path = "/data"
                 + Environment.getDataDirectory().getAbsolutePath()
@@ -80,21 +76,13 @@ public class MyApplication extends Application {
         return new CityDB(this, path);
     }
 
-    // 如果城市很多那么初始化也需要时间，需要使用多线程
+    // 使用多线程进行初始化
     private void initCityList() {
         mCityList = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 mCityList = mCityDB.getAllCity();
-//                int i = 0;
-//                for (City city : mCityList) {
-//                    i++;
-//                    String cityName = city.getCity();
-//                    String cityCode = city.getNumber();
-//                    Log.d(TAG, cityCode + " : " + cityName);
-//                }
-//                Log.d(TAG, "i = " + i);
             }
         }).start();
     }

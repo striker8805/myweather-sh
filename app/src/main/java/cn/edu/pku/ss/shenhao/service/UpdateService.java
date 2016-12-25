@@ -12,7 +12,8 @@ import java.util.TimerTask;
  * Created by striker on 2016/12/23.
  */
 public class UpdateService extends IntentService {
-    static final int UPDATE_INTERVAL = 600 * 1000;
+    static final int UPDATE_TIME = 600 * 1000;
+
     private Timer timer = new Timer();
 
     public UpdateService() {
@@ -25,13 +26,13 @@ public class UpdateService extends IntentService {
         // 后台 Service 自动刷新天气数据
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                Log.d("UpdateService", "自动刷新天气数据");
+                Log.d("UpdateService", "定时刷新");
 
-                // 广播通知机制提醒 Activity 刷新天气数据
+                // 广播通知机制提醒 Activity 定时刷新
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction("Update");
                 getBaseContext().sendBroadcast(broadcastIntent);
             }
-        }, 0, UPDATE_INTERVAL);
+        }, 0, UPDATE_TIME);
     }
 }
